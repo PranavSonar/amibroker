@@ -1,0 +1,33 @@
+//TREND INDICATOR
+// by Sudesh Jha sudeshjha@gmail.com
+//when the CCI cross zero line the trend is up & when it cross from top to down - zero like its sell trend
+
+_SECTION_BEGIN("CCI");
+periods = Param( "Periods", 14);
+Plot( CCI( periods ), _DEFAULT_NAME(), ParamColor( "Color",  colorBlue ), ParamStyle("Style")  );
+_SECTION_END();
+
+_SECTION_BEGIN("CCI1");
+periods = Param( "Periods", 50);
+Plot( CCI( periods ), _DEFAULT_NAME(), ParamColor( "Color",  colorRed ), ParamStyle("Style")  );
+_SECTION_END();
+
+
+Plot(0,"",colorGreen,styleLine);
+
+//Plot(50,"",colorYellow,styleLine);
+
+//Plot(100,"",colorWhite,styleLine);
+
+
+Buy = Cross( CCI(50), 0 )
+AND CCI(14) > CCI(50);
+
+Sell = Cross( 0,CCI(50))
+AND CCI(14) < CCI(50);
+
+
+
+shape = Buy * shapeUpArrow + Sell * shapeDownArrow;
+PlotShapes( shape, IIf( Buy, colorBlue, colorRed ));
+

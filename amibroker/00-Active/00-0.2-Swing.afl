@@ -1,0 +1,17 @@
+_SECTION_BEGIN("KPL Swing");
+
+res=HHV(H,20);
+sup=LLV(L,20);
+avd=IIf(C>Ref(res,-1),1,IIf(C<Ref(sup,-1),-1,0));
+avn=ValueWhen(avd!=0,avd,1);
+tsl=IIf(avn==1,sup,res);
+
+Plot(tsl, _DEFAULT_NAME(), colorTan, styleStaircase); 
+arrows=Cross(C,Ref(res,1))*shapeUpArrow + Cross(Ref(sup,1),C)*shapeDownArrow;
+PlotShapes(arrows,IIf(C>tsl,colorGreen,colorIndigo),0,IIf(Cross(C,Ref(res,-1)),Low,High));
+
+//Scanner mode
+Buy=Cross(C,Ref(res,-1));
+Sell=Cross(Ref(sup,-1),C);
+
+_SECTION_END();

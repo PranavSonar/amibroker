@@ -1,0 +1,4 @@
+BarColor=IIf(C>Ref(C,-1),colorBlue,colorRed);
+        PlotOHLC( Open,  High,  Low,  Close, "", BarColor, styleBar | styleThick );
+        ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+

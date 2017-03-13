@@ -1,0 +1,61 @@
+//PATRICK DOHERTY//
+SetChartOptions(0,chartShowArrows|chartShowDates);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) Vol " +WriteVal( V, 1.0 ) +"
+{{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 )) ));
+H1=SelectedValue(TimeFrameGetPrice( "H", inDaily, -1 ));
+L1=SelectedValue(TimeFrameGetPrice( "L", inDaily, -1 ));
+C1=SelectedValue(TimeFrameGetPrice( "C", inDaily, -1 ));
+/*PIVOT Calculation*/
+p = ( H1+ L1 + C1 )/3;
+s1 = (2*p)-H1;
+r1 = (2*p)-L1;
+s2 = p -(H1 - L1);
+s3 = S1 - (H1-L1);
+r2 = p +(H1 - L1);
+r3 = R1 +(H1-L1);
+ 
+Plot (p,"Pivot",25,styleDots);
+//Plot (r1,"R1",12,1);
+//Plot (r2,"R2",12,1);
+Plot (r3,"R3",12,1);
+//Plot (s1,"S1",3,1);
+// Plot (s2,"S2",3,1);
+Plot (s3,"S3",3,1);
+X=Cross(C,p);
+Z=Cross(p,C);
+
+_SECTION_END();
+
+//---- KPL SWING
+HaClose = (O+H+L+C)/4;
+HaOpen = AMA( Ref( HaClose, -1 ), 0.8);
+HaHigh = Max( H, Max( HaClose, HaOpen ) );
+HaLow = Min( L, Min( HaClose, HaOpen ) );
+xDiff = (HaHigh - Halow) * IIf(StrFind(Name(),"VND"),100,10000);
+barcolor = IIf(HaClose >= HaOpen,colorWhite,colorWhite);
+if( ParamToggle("Plot Heikin-Ashi", "No,Yes", 1 ) )
+   PlotOHLC( HaOpen, HaHigh, HaLow, HaClose, "Heikin Ashi " + Name(), colorBlue, styleCandle );
+else
+ Plot( C, "Regular candles " + Name(), colorBlue, styleCandle );
+j=Haclose;
+
+//======Indicator========
+
+_SECTION_BEGIN("Swing");
+no=Param( "Swing", 1, 1, 55 );
+tsl_col=ParamColor( "Color", colorWhite);
+ 
+res=HHV(H,no);
+sup=LLV(L,no);
+avd=IIf(C>Ref(res,-1),1,IIf(C<Ref(sup,-1),-1,0));
+avn=ValueWhen(avd!=0,avd,1);
+tsl=IIf(avn==1,sup,res);
+ 
+Plot(tsl, _DEFAULT_NAME(), tsl_col, styleStaircase); // or styleaArea
+ 
+Buy=Cross(C,tsl);
+Sell=Cross(tsl,C);
+PlotShapes( IIf( Buy, shapeUpArrow, shapeNone ), colorBrightGreen, layer = 0,yposition = HaLow, offset = -15);
+PlotShapes( IIf( Sell, shapeDownArrow, shapeNone ), colorRed, layer = 0, yposition = HaHigh, offset = -15);
+
+_SECTION_END();

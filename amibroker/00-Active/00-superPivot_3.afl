@@ -1,0 +1,174 @@
+_SECTION_BEGIN("Multi Pivots");
+_SECTION_BEGIN ("Multi Pivots - StockManiacs");
+//chart colors
+SetChartBkColor(ParamColor("Outer panel",colorSkyblue));
+SetChartBkGradientFill(
+ParamColor("Inner panel upper",colorLightBlue),
+ParamColor("Inner panel lower",colorLightYellow)
+,ParamColor("TitleBlock",colorWhite)); 
+SetChartOptions(0,chartShowDates|chartShowArrows|chartLogarithmic|chartWrapTitle);
+
+//basic price plotting
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 ) ) ));
+Plot( C, "Close", ParamColor("Color", colorBlack ), styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 
+
+T_F =ParamList("Pivot T_F","iDay|Hourly|2_Hrs|3_Hrs|4_Hrs|EOD|Weekly|Mon thly");
+
+if (T_F=="iDay") 
+{
+H_1 = TimeFrameGetPrice( "H", inDaily, -1 );
+L_1 = TimeFrameGetPrice( "L", inDaily, -1 );
+C_1 = TimeFrameGetPrice( "C", inDaily, -1 );
+O = TimeFrameGetPrice("O", inDaily); // current day's open
+}
+else if (T_F == "Hourly") 
+{
+H_1 = TimeFrameGetPrice( "H", inHourly, -1 );
+L_1 = TimeFrameGetPrice( "L", inHourly, -1 );
+C_1 = TimeFrameGetPrice( "C", inHourly, -1 );
+O = TimeFrameGetPrice( "O", inHourly );
+}
+else if (T_F == "2_Hrs") 
+{
+H_1 = TimeFrameGetPrice( "H", inHourly*2, -1 );
+L_1 = TimeFrameGetPrice( "L", inHourly*2, -1 );
+C_1 = TimeFrameGetPrice( "C", inHourly*2, -1 );
+O = TimeFrameGetPrice( "O", inHourly*2);
+}
+else if (T_F == "3_Hrs") 
+{
+H_1 = TimeFrameGetPrice( "H", inHourly*3, -1 );
+L_1 = TimeFrameGetPrice( "L", inHourly*3, -1 );
+C_1 = TimeFrameGetPrice( "C", inHourly*3, -1 );
+O = TimeFrameGetPrice( "O", inHourly*3);
+}
+else if (T_F == "4_Hrs") 
+{
+H_1 = TimeFrameGetPrice( "H", inHourly*4, -1 );
+L_1 = TimeFrameGetPrice( "L", inHourly*4, -1 );
+C_1 = TimeFrameGetPrice( "C", inHourly*4, -1 );
+O = TimeFrameGetPrice( "O", inHourly*4 );
+
+}
+else if (T_F == "EOD") 
+{
+H_1 = TimeFrameGetPrice( "H", inDaily, 0 );
+L_1 = TimeFrameGetPrice( "L", inDaily, 0 );
+C_1 = TimeFrameGetPrice( "C", inDaily, 0 );
+O = TimeFrameGetPrice( "O", inDaily );
+
+}
+else if (T_F == "Weekly") 
+{
+H_1 = TimeFrameGetPrice( "H", inWeekly, -1 );
+L_1 = TimeFrameGetPrice( "L", inWeekly, -1 );
+C_1 = TimeFrameGetPrice( "C", inWeekly, -1 );
+O = TimeFrameGetPrice( "O", inWeekly );
+}
+else if (T_F == "Monthly") 
+{
+H_1 = TimeFrameGetPrice( "H", inMonthly, -1 );
+L_1 = TimeFrameGetPrice( "L", inMonthly, -1 );
+C_1 = TimeFrameGetPrice( "C", inMonthly, -1 );
+O = TimeFrameGetPrice( "O", inMonthly );
+}
+
+// To calculate the Pivot Levels 
+
+R = H_1 - L_1; // Range
+_N(Pivot =ParamList("Pivot Type ", "Classical|Woodies|Fibonacci|WF"));
+
+if (Pivot =="Classical" )
+{
+PP = (H_1 + L_1 + C_1) / 3;
+r1 = (2 * PP) - L_1 ;
+s1 = (2 * PP) - H_1 ;
+r2 = PP - s1 + r1;
+s2 = PP - (r1 - s1) ;
+r3 = 2 * (PP - L_1) + H_1 ;
+s3 = L_1 - (2 * (H_1 - PP));
+r4 = Null;
+s4 = Null;
+}
+else if(Pivot =="Woodies" )
+{
+PP = (H_1 + L_1 + C_1 + O) / 4;
+r1 = (2 * PP) - L_1;
+r2 = PP + R;
+r3 = H_1 + 2 * (PP - L_1);
+r4 = r3 + R;
+s1 = (2 * PP) - H_1;
+s2 = PP - R;
+s3 = L_1 - 2 * (H_1 - PP);
+s4 = S3 - R;
+}
+
+else if(Pivot =="Fibonacci" )
+{
+PP = (H_1 + L_1 + C_1) / 3;
+r3 = PP + 1.000 * R;
+r2 = PP + 0.618 * R;
+r1 = PP + 0.382 * R; 
+s1 = PP - 0.382 * R; 
+s2 = PP - 0.618 * R; 
+s3 = PP - 1.000 * R;
+r4 = Null;
+s4 = Null;
+}
+else if (Pivot == "WF")
+{
+PP = (H_1 + L_1 + O + O) / 4;
+s1 = PP - (R * 0.38);
+s2 = PP - (R * 0.62);
+s3 = PP - (R * 1.272);
+r1 = PP + (R * 0.38);
+r2 = PP + (R * 0.62);
+r3 = PP + (R * 1.272);
+r4 = Null;
+s4 = Null;
+}
+
+//Defining TF on charts
+procedure AddT_fParam(defaultvalue)
+{
+global T_F;
+T_F = ParamList("Time Frame", List = "iDay|Hourly|2_Hrs|3_Hrs|4_Hrs|EOD|Weekly|Monthly" , defaultvalue);
+
+if(T_F == "iDay") T_F = inDaily; 
+else if(T_F == "Hourly")	T_F = inHourly;
+else if(T_F == "2_Hrs")	T_F = inHourly*2; 
+else if(T_F == "3_Hrs")	T_F = inHourly*3;
+else if(T_F == "4_Hrs")	T_F = inHourly*4; 
+else if(T_F == "EOD") T_F = inDaily; 
+else if(T_F == "Weekly") T_F = inWeekly; 
+else if(T_F == "Montly") T_F = inMonthly; 
+}
+
+//	Plot Pivot Levels in the charts
+
+Plot (PP,"PP",colorViolet,styleDots,styleThick,1);
+Plot (r1,"R1",colorDarkRed,styleLine,styleThick,1);
+Plot (r2,"R2",colorDarkRed,styleLine,styleThick,1);
+Plot (r3,"R3",colorDarkRed,styleLine,styleThick,1);
+Plot (s1,"S1",colorDarkGreen,styleLine,styleThick,1);
+Plot (s2,"S2",colorDarkGreen,styleLine,styleThick,1);
+Plot (s3,"S3",colorDarkGreen,styleLine,styleThick,1);
+Plot (r4,"R4",colorDarkRed,styleLine,styleThick,1);
+Plot (s4,"S4",colorDarkGreen,styleLine,styleThick,1);
+
+
+//	Add Pivot levels on charts as text
+Title = Title + EncodeColor(colorDarkTeal)+
+"\n,Pivot T_F = "+T_F + " \n " +
+EncodeColor(colorRed)+"R4 = "+ r4 +"\n"+
+EncodeColor(colorRed)+"R3 = "+ r3 +"\n"+
+EncodeColor(colorRed)+"R2 = "+ r2 + "\n"+
+EncodeColor(colorRed)+"R1 = "+ r1 + "\n"+ "\n"+
+EncodeColor(colorViolet)+"PP = "+ PP + "\n"+ "\n" +
+EncodeColor(colorGreen)+"S1 = "+ s1 + "\n"+
+EncodeColor(colorGreen)+"S2 = "+ s2 + "\n"+
+EncodeColor(colorGreen)+"S3 = "+ s3 + "\n"+
+EncodeColor(colorGreen)+"S4 = "+ s4 + " \n" ;
+
+_SECTION_END ();
+_SECTION_END();

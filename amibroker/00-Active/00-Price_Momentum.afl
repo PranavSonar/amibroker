@@ -1,0 +1,30 @@
+/* Bernstein Momentum Indicator */
+/* Set Scaling to Automatic, Show dates On, Percent On, Middle On */
+
+Title = "Bernstein MOM Close - Ref(Close,-7)"; 
+GraphXSpace = 5;
+Graph0 = MA(Close - Ref(Close,-7),1); 
+Graph0Style = 5; 
+Graph0Color = 29;
+Graph1 = MA(Graph0,5);
+Graph1Style = 1;  
+Graph1Color = 32;
+
+
+DaysAgo =Optimize("DaysAgo",-28,-40,-16,4);
+Fast = Optimize("Fast", 1, 1,5,1);
+Slow = Optimize("Slow",28,16,40,4);
+/* Note: It is merely a coincidence that DaysAgo and Slow use the same parameter set. */
+
+Buy = Cross( MA(Close - Ref(Close,DaysAgo),Fast),
+MA(Close - Ref(Close,DaysAgo),Slow) );
+
+Sell = Cross( MA(Close - Ref(Close,DaysAgo),Slow),
+MA(Close - Ref(Close,DaysAgo),Fast) );
+
+
+Short = Cross( MA(Close - Ref(Close,DaysAgo),Slow),
+MA(Close - Ref(Close,DaysAgo),Fast) );
+
+Cover = Cross( MA(Close - Ref(Close,DaysAgo),Fast),
+MA(Close - Ref(Close,DaysAgo),Slow) );

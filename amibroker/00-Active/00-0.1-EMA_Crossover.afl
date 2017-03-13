@@ -1,0 +1,45 @@
+//###########################################BEGIN OF EMA-CROSSOVER############################################################################# 
+_SECTION_BEGIN("BACK COLR");
+
+GfxSetOverlayMode(1);
+
+GfxSetOverlayMode(1);
+GfxSelectFont("Tahoma", Status("pxheight")/20 ); /* Up down name*/
+GfxSetTextAlign( 6 );// center alignment
+GfxSetTextColor( ParamColor("Text Color", ColorHSB( 42, 42, 42 ) ));
+GfxSetBkMode(0); // transparent
+GfxTextOut( Name(), Status("pxwidth")/2, Status("pxheight")/7);
+GfxSelectFont("Tahoma", Status("pxheight")/30 );
+//GfxTextOut( IndustryID(1), Status("pxwidth")/2, Status("pxheight")/5 ); /* Up Down Sector*/
+
+GfxSelectFont("Tahoma", Status("pxheight")/40 );
+GfxTextOut( "Golden Cross", Status("pxwidth")/2, Status("pxheight")/4);
+GfxSelectFont("Tahoma", Status("pxheight")/20 );
+
+_SECTION_BEGIN("Price");
+SetChartOptions(0,chartShowArrows|chartShowDates);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}", O, H, L, C, SelectedValue( ROC(C, 1 ) ) ));
+Plot( C, "Close", ParamColor("Color", colorBlack ), styleNoTitle | ParamStyle("Style") | GetPriceStyle() );
+_SECTION_END();
+
+_SECTION_BEGIN("MA");
+
+
+P = ParamField("Price field",-1);
+Periods1 = Param("Periods1", 5, 1, 500, 1, 10 );
+Periods2 = Param("Periods2", 13, 1, 500, 1, 10 );
+Plot( EMA( P, Periods1 ), StrFormat(_SECTION_NAME()+"(%g)", Periods1), ParamColor( "Color1", colorRed ), ParamStyle("Style") );
+Plot( EMA( P, Periods2 ), StrFormat(_SECTION_NAME()+"(%g)", Periods2), ParamColor( "Color2", colorBlue ), ParamStyle("Style") );
+Buy = Cross(EMA( P, Periods1 ),EMA( P, Periods2 ) );
+Sell = Cross(EMA( P,Periods2 ), EMA( P, Periods1 ) );
+
+PlotShapes(IIf(Buy==1, shapeHollowUpArrow , shapeNone), colorGreen, 0,Low, Offset=-15);   
+PlotShapes(IIf(Sell==1, shapeHollowDownArrow, shapeNone), colorRed, 0,High, Offset=-15);
+
+PlotOHLC( Null,EMA( P, Periods1 ),EMA( P, Periods2 ),Null, "", IIf(EMA( P, Periods1 )>EMA( P, Periods2 ) ,colorLime,colorRose), styleCloud);
+
+Color = IIf( EMA(p,periods1) > EMA(p,periods2) , colorLime, IIf( EMA(p,periods2) > EMA(p,periods1), colorPink, colorGrey50 ));
+Plot( 1, "", Color, styleArea | styleOwnScale | styleNoLabel, -0.1, 30 );
+
+_SECTION_END();
+//###########################################END OF EMA-CROSSOVER#############################################################################

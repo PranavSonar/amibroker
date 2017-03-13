@@ -1,0 +1,52 @@
+_SECTION_BEGIN("demark from ami library");
+
+
+// The DeMarker indicator is an attempt to overcome the shortcomings of classical overbought / oversold indicators. 
+//The DeMarker Indicator identifies potential price bottoms and tops. 
+//It accomplishes this by making price comparisons from one bar to the next and measuring the level of price demand. 
+//For more information please check AmiBroker Tips newsletter <a href="http://www.amibroker.com/newsletter/02-2000.html">Issue 2/2000</a>
+
+
+/*
+** Tom Demark's DeMarker Indicator
+** AFL Implementation by Tomasz Janeczko
+*/
+
+
+MaxGraph=3;
+
+highm = IIf( H > Ref( H, -1 ), H - Ref( H, - 1), 0 );
+lowm = IIf( L < Ref( L, -1 ), Ref( L, - 1 ) - L, 0 );
+
+DeMarker = 100 *  Sum( highm, 13 )/( Sum( lowm, 13 ) + Sum( highm, 13 ) );
+
+Graph0 = DeMarker;
+
+Plot(80,"",colorRed,styleLine+styleDots,maskAll); 
+Plot(20,"",colorGreen,styleLine+styleDots,maskAll); 
+
+
+Buy = DeMarker<20; Sell = DeMarker>80; 
+
+buyshape = Buy * shapeUpArrow; SellShape = Sell * shapeDownArrow;
+PlotShapes(BuyShape, colorGreen, 0); PlotShapes(SellShape, colorRed, 0);
+
+
+Filter=Buy OR Sell;
+AddColumn( Buy, "Buy", 1);
+AddColumn(Sell, "Sell", 1);
+AddColumn(Close,"Close",1.2);
+AddColumn(Volume,"Volume",1.0); 
+
+Title=EncodeColor( colorDarkTeal ) + " - {{INTERVAL}} {{DATE}}: "+">>>>"+Name()  +">>>>"+ "  DeMark from thomasz  =="+ EncodeColor( colorGreen )+WriteVal(( Graph0 )); 
+
+ToolTip=StrFormat("Open: %g\nHigh:  %g\nLow:   %g\nClose:  %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+SetChartBkColor(ParamColor("Outer panel color ",colorWhite)); // color of outer border 
+SetChartBkGradientFill( ParamColor("Inner panel color upper half",colorPink),ParamColor("Inner panel color lower half",colorCustom1)); // color of inner panel
+
+// The DeMarker indicator is an attempt to overcome the shortcomings of classical overbought / oversold indicators.
+// The DeMarker Indicator identifies potential price bottoms and tops. 
+//It accomplishes this by making price comparisons from one bar to the next and measuring the level of price demand.
+//DeMarker should be interpreted as other overbought / oversold indicators such as RSI with the levels of 30 and 70. 
+//Compared to RSI it is smoother but still able to detect tops and bottoms a little bit better.
+_SECTION_END();

@@ -1,0 +1,54 @@
+_SECTION_BEGIN("01");
+SL = ( HHV( H, 22 ) + LLV( L, 22) )/2;
+TL = ( HHV( H, 7 ) + LLV( L, 7 ) )/2;
+DL = Ref( C, 25 );
+Span1 = Ref( ( SL + TL )/2, -25 );
+Span2 = Ref( (HHV( H, 44) + LLV(L, 44))/2, -25);
+
+// --added by Trung Duong
+LSA = (SL + TL)/2;
+LSB = (HHV( H, 44) + LLV(L, 44))/2;
+P3 = Param("Leading Span Displacement", 25, 2, 200, 1, 0);
+// C3 = ParamColor("Leading A Color", colorBrightGreen);
+// C4 = ParamColor("Leading B Color", colorPink);
+// -- ended
+
+MaxGraph = 6;
+
+Plot(SL,"Kijun-sen",colorBlue,styleThick); // standard, base, or kijun-sen line
+Plot(TL,"Tenkan-sen",colorRed,styleThick); // turning, conversion, or tenkan-sen line
+Plot(DL,"Chikou Span-Delayed",colorViolet,styleLine); // delayed, lagging, or chikou span
+Plot(Span1,"A",colorWhite,styleLine); // senkou span A, kumo, or white clouds
+Plot(Span2,"B",colorWhite,styleLine); // senkou span B, kumo, or white clouds
+
+Buy1 = IIf(Cross(TL,SL) AND TL>Span1 AND TL>Span2,1,0);
+Buy2 = IIf(Cross(TL,SL) AND ( (TL>Span1 AND TL<Span2) OR (TL<Span1 AND TL>Span2) ),1,0);
+Buy = IIf( (Buy1 OR Buy2) AND C>Ref(DL,-26),1,0);
+
+Sell1 = IIf(Cross(SL,TL) AND SL<Span1 AND SL<Span2,1,0);
+Sell2 = IIf(Cross(SL,TL) AND ( (SL>Span1 AND SL<Span2) OR (SL<Span1 AND SL>Span2) ),1,0);
+Sell = IIf( (Sell1 OR Sell2) AND C<Ref(DL,-26),1,0);
+
+IIf(Buy,PlotShapes(shapeDownArrow*Buy,colorGreen),0);
+IIf(Sell,PlotShapes(shapeUpArrow*Sell,colorRed),0);
+
+PlotOHLC (LSA,LSA,LSB,LSB,"Cloud",IIf(LSA>LSB,ColorBlend(colorBrightGreen, colorWhite, 0.6),ColorBlend(colorPink,colorWhite, 0.4)),styleCloud, 0, 0, P3);
+_SECTION_END();
+
+
+// Backup
+// SL = ( HHV( H, 26 ) + LLV( L, 26) )/2;
+// TL = ( HHV( H, 9 ) + LLV( L, 9 ) )/2;
+// DL = Ref( C, 25 );
+// Span1 = Ref( ( SL + TL )/2, -25 );
+// Span2 = Ref( (HHV( H, 52) + LLV(L, 52))/2, -25);
+//
+//
+//
+// Plot(SL,"SL",colorBlue,styleThick); // standard, base, or kijun-sen line
+// Plot(TL,"TL",colorRed,styleThick); // turning, conversion, or tenkan-sen line
+// Plot(DL,"DL",colorViolet,styleLine); // delayed, lagging, or chikou span
+// Plot(Span1,"A",colorWhite,styleLine); // senkou span A, kumo, or white clouds
+// Plot(Span2,"B",colorWhite,styleLine); // senkou span B, kumo, or white clouds
+// Plot(Close,"Close",colorBlack,styleLine); // price close
+
