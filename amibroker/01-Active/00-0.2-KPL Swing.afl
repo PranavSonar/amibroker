@@ -1,0 +1,37 @@
+_SECTION_BEGIN("KPL Swing");
+//Copyright Kamalesh Langote. Email:kpl@vfmdirect.com. More details at http://www.vfmdirect.com/kplswing
+//Save indicator as "kplswing.afl" in C: program files > Amibroker > Formulas > Custom folder and then drap and drop on price chart
+no=Param( "Swing", 1, 1, 55 );
+//---- KPL SWING                                                                                   
+HaClose = (O+H+L+C)/4;
+HaOpen = AMA( Ref( HaClose, -1 ), 0.8);
+HaHigh = Max( H, Max( HaClose, HaOpen ) );
+HaLow = Min( L, Min( HaClose, HaOpen ) );
+xDiff = (HaHigh - Halow) * IIf(StrFind(Name(),"VND"),100,10000);
+barcolor = IIf(HaClose >= HaOpen,colorWhite,colorWhite);
+if( ParamToggle("Plot Heikin-Ashi", "No,Yes", 1 ) )
+   PlotOHLC( HaOpen, HaHigh, HaLow, HaClose, "Heikin Ashi " + Name(), colorWhite, styleCandle );
+else
+ Plot( C, "Regular candles " + Name(), colorWhite, styleCandle );
+j=Haclose;
+
+//=======================================================================================================================
+//=========================Indicator==============================================================================================
+
+tsl_col=ParamColor( "Color", colorWhite);
+ 
+res=HHV(H,no);
+sup=LLV(L,no);
+avd=IIf(C>Ref(res,-1),1,IIf(C<Ref(sup,-1),-1,0));
+avn=ValueWhen(avd!=0,avd,1);
+tsl=IIf(avn==1,sup,res);
+ 
+Plot(tsl, _DEFAULT_NAME(), tsl_col, styleStaircase); // or styleaArea
+ 
+Buy=Cross(C,tsl);
+Sell=Cross(tsl,C);
+PlotShapes( IIf( Buy, shapeUpArrow, shapeNone ), colorBrightGreen, layer = 0,yposition = HaLow, offset = -15);
+PlotShapes( IIf( Sell, shapeDownArrow, shapeNone ), colorRed, layer = 0, yposition = HaHigh, offset = -15);
+
+_SECTION_END();
+

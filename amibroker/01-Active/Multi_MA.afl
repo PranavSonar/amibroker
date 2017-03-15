@@ -1,0 +1,41 @@
+_SECTION_BEGIN("05-SMA");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 15, 2, 300, 1, 10 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style") ); 
+_SECTION_END();
+
+_SECTION_BEGIN("05-SMA1");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 15, 2, 300, 1, 10 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style") ); 
+_SECTION_END();
+
+_SECTION_BEGIN("05-SMA2");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 15, 2, 300, 1, 10 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style") ); 
+_SECTION_END();
+
+_SECTION_BEGIN("05-SMA3");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 15, 2, 300, 1, 10 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style") ); 
+_SECTION_END();
+
+_SECTION_BEGIN("05-SMA4");
+P = ParamField("Price field",-1);
+Periods = Param("Periods", 15, 2, 300, 1, 10 );
+Plot( MA( P, Periods ), _DEFAULT_NAME(), ParamColor( "Color", colorCycle ), ParamStyle("Style") ); 
+_SECTION_END();
+
+_SECTION_BEGIN("Oneil Styple Price");
+SetChartOptions(0,chartShowArrows|chartShowDates);
+
+//
+myA = ( Open + Close ) /2;
+//
+BarColor=IIf(C>Ref(C,-1),colorGreen,colorRed);
+//PlotOHLC( myA,  High,  Low,  myA, "", BarColor, styleBar);
+PlotOHLC( Close,  High,  Low,  Close, "", BarColor, styleBar);
+ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+_SECTION_END();

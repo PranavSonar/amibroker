@@ -1,0 +1,38 @@
+_SECTION_BEGIN("Ichimoku Trung Duong - Version 1.01");
+P1 = Param("Conversion Period", 7, 2, 200, 1, 0);
+C1 = ParamColor("Conversion Color", colorBlue);
+CL = (HHV(H,P1)+LLV(L,P1))/2;
+
+P2 = Param("Base Period", 22, 2, 200, 1, 0);
+C2 = ParamColor("Base Color", colorRed);
+BL = (HHV(H,P2)+LLV(L,P2))/2;
+
+C3 = ParamColor("Leading A Color", colorBrightGreen);
+LSA = (CL+BL)/2;
+
+P4 = Param("Leading B Span", 44, 2, 200, 1, 0);
+C4 = ParamColor("Leading B Color", colorPink);
+LSB = (HHV(H,P4)+LLV(L,P4))/2;
+
+P3 = Param("Leading Span Displacement", 22, 2, 200, 1, 0);
+
+P5 = Param("Lagging Displacement", -22, 2, 200, 1, 0);
+C5 = ParamColor("Lagging Color", colorGreen);
+DL = Ref ( C, P2 );
+
+S1 = Param("Strong Support", 100, 2, 200, 1, 0); 
+// StrSupport = (HHV(H,S1)+LLV(L,S1))/2;
+Plot(CL,"Tenkan-sen (Conversion)=TinHieu/DaoChieu", C1, styleThick);
+Plot(BL, "Kijun-sen (Base)=XuHuong", C2, styleThick);
+Plot(LSA, "Senkou Span A", C3, styleLine, 0, 0, P3);
+Plot(LSB, "Senkou Span B", C4, styleLine, 0, 0, P3);
+Plot(C, "Chikou Span (Delayed)", C5, styleLine, 0, 0, P5);
+
+//Plot(C, "Chikou Span (Delayed)", C5, styleLine);
+//Plot(StrSupport,"DaoGam", colorYellow, styleThick);
+//Plot(DL,"Chikou Span-Delayed",colorViolet,styleLine); // delayed, lagging, or chikou span
+
+PlotOHLC (LSA,LSA,LSB,LSB,"Cloud",IIf(LSA>LSB,ColorBlend(C3, colorWhite, 0.6),
+	ColorBlend(C4,colorWhite, 0.4)),styleCloud, 0, 0, P3);
+
+_SECTION_END();

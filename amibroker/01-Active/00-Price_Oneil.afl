@@ -1,0 +1,19 @@
+_SECTION_BEGIN("Oneil Styple Price");
+SetChartOptions(0,chartShowArrows|chartShowDates);
+//
+myA = ( Open + Close ) /2;
+//
+BarColor=IIf(C>Ref(C,-1),colorGreen,colorRed);
+// PlotOHLC( myA,  High,  Low,  myA, "", BarColor, styleBar | styleThick);
+//PlotOHLC( myA,  High,  Low,  myA, "", BarColor, styleBar ); 
+PlotOHLC( Close,  High,  Low,  Close, "", BarColor, styleBar );
+ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+_SECTION_END();
+//###################################
+aV=MA(V,13);
+aVV=3*aV;
+P = ParamField("Price field",-1);
+Buy = Cross(EMA( P, 7 ),EMA( P, 13 ) );
+
+PlotShapes(IIf(V>1.5*Ref(V, -1) AND V>aVV AND Close > MA(p, 10), shapeHollowStar , shapeNone), colorGreen, 0,Low, Offset=-15); 
+//###################################

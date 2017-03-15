@@ -1,0 +1,2 @@
+Filter = V > 10*Ref(V,-1) AND V>100000;
+AddColumn(V, "Volume", 1);

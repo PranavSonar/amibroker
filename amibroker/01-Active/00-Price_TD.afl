@@ -1,0 +1,5 @@
+_SECTION_BEGIN("00-Price_TD");
+BarColor=IIf(C>Ref(C,-1),colorBlack,colorOrange);
+PlotOHLC( Open,  High,  Low,  Close, "", BarColor, styleBar);
+ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+_SECTION_END();

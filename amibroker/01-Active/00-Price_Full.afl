@@ -1,0 +1,35 @@
+_SECTION_BEGIN("Price All Style");
+ 
+TypeofPrice  = ParamList("Type of Price","Bar Chart,Candle Stick,AmiBroker, Bar Chart Thick",0);
+switch(TypeofPrice)
+{
+   case "Bar Chart":
+        BarColor=IIf(C>Ref(C,-1),colorBlue,colorRed);
+        PlotOHLC( Open,  High,  Low,  Close, "", BarColor, styleBar);
+        ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+      break;
+ 
+   case "Candle Stick":
+        BgColor=colorBlack;			//ParamColor("BgColor", colorBlack);
+        SetChartBkGradientFill( BgColor,BgColor,BgColor); 
+        upcolor=colorGreen;			//ParamColor("Up color ",colorBlue);
+        downcolor=colorOrange;			//ParamColor("Down color ",colorRed);
+        barcolor=IIf(C>Ref(C,-1),upcolor,downcolor);
+        Insidecolor=IIf(C<O,barcolor,BgColor);
+        SetBarFillColor(Insidecolor);
+        PlotOHLC( Open, High, Low, Close, " " , barcolor, styleCandle | styleThick );
+        ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+      break; 
+   case "Bar Chart Thick":
+        BarColor=IIf(C>Ref(C,-1),colorBlue,colorRed);
+        PlotOHLC( Open,  High,  Low,  Close, "", BarColor, styleBar | styleThick );
+        ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+       break;	
+   
+   case "AmiBroker":
+        _N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Open %g, Hi %g, Lo %g, Close %g (%.1f%%) {{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 ) ) ));
+        Plot( C, "Close", colorBlack , styleNoTitle+styleCandle ); 
+        ToolTip=StrFormat("Open: %g\nHigh: %g\nLow: %g\nClose: %g (%.1f%%)\nVolume: "+NumToStr( V, 1 ), O, H, L, C, SelectedValue( ROC( C, 1 )));
+
+}
+_SECTION_END();

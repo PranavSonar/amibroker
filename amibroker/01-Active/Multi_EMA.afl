@@ -1,0 +1,57 @@
+_SECTION_BEGIN("Multi EMA");
+P1 = ParamField("Price field",-1);
+Periods1 = Param("Periods1", 3, 2, 300, 1, 10 );
+Plot( EMA( P1, Periods1 ),"EMA3" , ParamColor( "Color1", colorCycle ), ParamStyle("Style1") ); 
+
+P2 = ParamField("Price field",-1);
+Periods2 = Param("Periods2", 5, 2, 300, 1, 10 );
+Plot( EMA( P2, Periods2 ), "EMA5", ParamColor( "Color2", colorCycle ), ParamStyle("Style2") ); 
+
+P3 = ParamField("Price field",-1);
+Periods3 = Param("Periods3", 7, 2, 300, 1, 10 );
+Plot( EMA( P3, Periods3 ), "EMA7", ParamColor( "Color3", colorCycle ), ParamStyle("Style3") );
+
+P4 = ParamField("Price field",-1);
+Periods4 = Param("Periods4", 10, 2, 300, 1, 10 );
+Plot( EMA( P4, Periods4 ), "EMA10", ParamColor( "Color4", colorCycle ), ParamStyle("Style4") ); 
+ 
+P5 = ParamField("Price field",-1);
+Periods5 = Param("Periods5", 13, 2, 300, 1, 10 );
+Plot( EMA( P5, Periods5 ), "EMA13", ParamColor( "Color5", colorCycle ), ParamStyle("Style5") ); 
+
+P6 = ParamField("Price field",-1);
+Periods6 = Param("Periods6", 15, 2, 300, 1, 10 );
+Plot( EMA( P6, Periods6 ), "EMA15", ParamColor( "Color6", colorCycle ) , ParamStyle("Style6") ); 
+
+P7 = ParamField("Price field",-1);
+Periods7 = Param("Periods7", 17, 2, 300, 1, 10 );
+Plot( EMA( P7, Periods7 ), "EMA17", ParamColor( "Color7", colorCycle ), ParamStyle("Style7") ); 
+
+P8 = ParamField("Price field",-1);
+Periods8 = Param("Periods8", 20, 2, 300, 1, 10 );
+Plot( EMA( P8, Periods8 ), "EMA20", ParamColor( "Color8", colorCycle ), ParamStyle("Style8") ); 
+
+P9 = ParamField("Price field",-1);
+Periods9 = Param("Periods9", 22, 2, 300, 1, 10 );
+Plot( EMA( P9, Periods6 ), "EMA22", ParamColor( "Color9", colorCycle ) , ParamStyle("Style9") ); 
+
+P10 = ParamField("Price field",-1);
+Periods10 = Param("Periods10", 25, 2, 300, 1, 10 );
+Plot( EMA( P10, Periods10 ), "EMA25", ParamColor( "Color10", colorCycle ), ParamStyle("Style10") ); 
+
+P11 = ParamField("Price field",-1);
+Periods11 = Param("Periods11", 30, 2, 300, 1, 10 );
+Plot( EMA( P11, Periods11 ), "EMA30", ParamColor( "Color11", colorCycle ), ParamStyle("Style11") ); 
+
+P12 = ParamField("Price field",-1);
+Periods12 = Param("Periods12", 40, 2, 300, 1, 10 );
+Plot( EMA( P12, Periods12 ), "EMA40", ParamColor( "Color12", colorCycle ), ParamStyle("Style12") ); 
+
+P13 = ParamField("Price field",-1);
+Periods13 = Param("Periods13", 50, 2, 300, 1, 10 );
+Plot( EMA( P13, Periods13 ), "EMA50", ParamColor( "Color13", colorCycle ), ParamStyle("Style13") ); 
+
+P14 = ParamField("Price field",-1);
+Periods14 = Param("Periods14", 60, 2, 300, 1, 10 );
+Plot( EMA( P14, Periods14 ), "EMA60", ParamColor( "Color14", colorCycle ), ParamStyle("Style14") ); 
+

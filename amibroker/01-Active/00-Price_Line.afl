@@ -1,0 +1,4 @@
+SetChartOptions(0,chartShowArrows|chartShowDates);
+_N(Title = StrFormat("{{NAME}} - {{INTERVAL}} {{DATE}} Op-%g, Hi-%g, Lo-%g, Cl-%g (%.1f%%) {{VALUES}}", O, H, L, C, SelectedValue( ROC( C, 1 ) ) ));
+//Plot( C, "Close", ParamColor("Color", colorDefault ), styleNoTitle | ParamStyle("Style") | GetPriceStyle() ); 
+Plot( C, "Close", colorBlack, styleLine, Null, Null, 0, 1, 2 /* 2 pixel wide */ );

@@ -1,0 +1,26 @@
+//    Amibroker does support both, RSI and RelStrength as shown by the syntax below.
+
+    RSI (relative strength index);
+    RSI( periods = 14 );
+    RSIa( array, periods = 14 );
+
+    RelStrength (comparative relative strength);
+    RelStrength( "tickername", fixup = 1);
+     
+
+//The formula is simple: You need the following variables:
+//The average of price change in percentiles for the last..:
+//3 month period (A%)
+//6 month period (B%)
+//9 month period (C%)
+//12 month period (D%)
+//
+//Then you need to put two times more weight for the A variable.
+//
+//Formula:
+//40 * A% + 20 * B% + 20 * C% + 20 * D% - 100% = the basis of rank calculation for the relative strength of the stock.
+//
+//And then you need a tool to rank al the results from the stock universe against 
+//each other and give the best performance a 100% reading and the worst a 0% reading. 
+//All this can be done in microsoft excel... 
+//RS = (40% * Tổng % 3 tháng) + (20% * tổng % 9 tháng) + (20%*tổng % 6 tháng) + (20%* tổng % 12 tháng)

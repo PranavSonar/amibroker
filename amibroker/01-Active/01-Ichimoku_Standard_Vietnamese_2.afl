@@ -1,0 +1,42 @@
+SL = ( HHV( H, 22 ) + LLV( L, 22) )/2;// standard, base, or kijun-sen line
+TL = ( HHV( H, 7 ) + LLV( L, 7 ) )/2;// turning, conversion, or tenkan-sen line
+DL = Ref( C, 22 );                      // delayed close price, or chikou span
+Span1 = Ref( ( SL + TL )/2, -22 );      //Span1 and Span2 define the clouds
+Span2 = Ref( (HHV( H, 44) + LLV(L, 44))/2, -22);
+ 
+CStyle = ParamToggle("Showcandles?","N|Y");//Choose Candle or Line for Price Plot
+hue = Param("Hue",140,0,255,1);
+sat = Param("Sat",100,0,255,1);
+bri = Param("bri",220,0,255,1);
+ 
+MaxGraph = 8;
+Refline = (Span1 + Span2)/2;
+Graph0 = Refline;
+Graph0Style = 16;//No line plotted, used as a reference line for arrows etc.
+if(Cstyle )
+Plot(C,"Price",colorBlack,styleCandle);
+else
+Plot(Close,"Close",colorBlack,styleThick); 
+Plot(SL,"SL",colorBlue,styleThick); 
+Plot(TL,"TL",colorRed,styleThick); 
+Plot(DL,"DL",colorViolet,styleLine); 
+PlotOHLC(Span1,Span1,Span2,Span2,"Cloud",ColorHSB(Hue,sat,bri),styleCloud);
+ 
+above = IIf(TL>Span1 AND TL>Span2,1,0);
+within = IIf((TL>Span1 AND TL<Span2) OR (TL<Span1 AND TL>Span2) ,1,0);
+below = IIf(TL<Span1 AND TL<Span2,1,0);
+Buy = Cross(TL,SL);
+Sell = Cross(SL,TL);
+StrongBuy = Buy AND above;
+MediumBuy = Buy AND within;
+WeakBuy = Buy AND below;
+StrongSell = Sell AND below;
+MediumSell = Sell AND within;
+WeakSell = Sell AND above;
+ 
+IIf( (StrongBuy),PlotShapes(shapeUpArrow*StrongBuy,colorGreen),0);
+IIf( (MediumBuy),PlotShapes(shapeUpTriangle*MediumBuy,colorGreen),0);
+IIf( (WeakBuy),PlotShapes(shapeHollowUpArrow*WeakBuy,colorIndigo),0);
+IIf( (StrongSell),PlotShapes(shapeDownArrow*StrongSell,colorRed),0);
+IIf( (MediumSell),PlotShapes(shapeDownTriangle*MediumSell,colorRed),0);
+IIf( (WeakSell),PlotShapes(shapeHollowDownArrow*WeakSell,colorBrown),0);

@@ -1,0 +1,26 @@
+_N(Title = StrFormat(FullName() + "  {{INTERVAL}} {{DATE}} Open %g, High %g, Low %g, Close %g (%.1f%%) Volume " +WriteVal( V, 1.0 ) +"\n{{VALUES}}", O, H, L, C,
+SelectedValue( ROC( C, 1 )) ));
+PriceStyle = GetPriceStyle();
+PriceStyleOpt = ParamStyle("Style") | PriceStyle;
+
+
+Plot( C, "", colorBlack,styleBar);
+P = (H + L + C)/3; //Pivot
+R2 = P + (H-L); //Resistance 2
+R1 = (P*2) - L; // Resistance 1
+
+S1 = (P*2) - H; //Support 1
+S2 = P - (H-L);//Support 2
+
+PositionSize = 3000000; //Initial Equity Size
+
+Buy = Close > Ref(R1,-1); //Buy Condition
+Sell = Close < Ref(S2,-1); //Sell Condition
+
+Buy = ExRem(Buy,Sell); //Removing Excessive Buy Signals At each bars
+Sell = ExRem(Sell,Buy); //Removing Excessive Sell Signals at each bars
+
+
+shape = Buy * shapeUpArrow + Sell * shapeDownArrow; 
+PlotShapes( shape, IIf( Buy, colorGreen, colorRed ), 0, IIf( Buy, Low, High ) ); 
+

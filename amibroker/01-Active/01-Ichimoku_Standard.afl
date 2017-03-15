@@ -1,0 +1,27 @@
+P1 = Param("Conversion Period", 9, 2, 200, 1, 0);
+C1 = ParamColor("Conversion Color", colorBlue);
+CL = (HHV(H,P1)+LLV(L,P1))/2;
+
+P2 = Param("Base Period", 26, 2, 200, 1, 0);
+C2 = ParamColor("Base Color", colorRed);
+BL = (HHV(H,P2)+LLV(L,P2))/2;
+
+C3 = ParamColor("Leading A Color", colorBrightGreen);
+LSA = (CL+BL)/2;
+
+P4 = Param("Leading B Span", 52, 2, 200, 1, 0);
+C4 = ParamColor("Leading B Color", colorPink);
+LSB = (HHV(H,P4)+LLV(L,P4))/2;
+
+P3 = Param("Leading Span Displacement", 26, 2, 200, 1, 0);
+
+P5 = Param("Lagging Displacement", -26, 2, 200, 1, 0);
+C5 = ParamColor("Lagging Color", colorGreen);
+
+Plot(CL,"Tenkan-sen (ConversionLine)", C1, styleLine);
+Plot(BL, "Kijun-sen (BaseLine)", C2, styleLine);
+Plot(LSA, "Senkou Span A (LeadingSpan A)", C3, styleLine, 0, 0, P3);
+Plot(LSB, "Senkou Span B (LeadingSpan B)", C4, styleLine, 0, 0, P3);
+Plot(C, "Chikou Span (LaggingSpan)", C5, styleLine, 0, 0, P5);
+PlotOHLC (LSA,LSA,LSB,LSB,"Cloud",IIf(LSA>LSB,ColorBlend(C3, colorWhite, 0.6),
+	ColorBlend(C4,colorWhite, 0.4)),styleCloud, 0, 0, P3);

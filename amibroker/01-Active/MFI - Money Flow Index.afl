@@ -1,0 +1,5 @@
+periods = Param( "Periods", 14, 2, 200, 1 );
+Plot( MFI(periods), _DEFAULT_NAME(), ParamColor("Color", colorCycle ), ParamStyle("Style") );
+Plot( 20 , "", colorGreen,styleDashed);
+Plot( 80 , "", colorRed,styleDashed);
+

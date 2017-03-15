@@ -1,0 +1,6 @@
+RSTick = ParamStr("Base Ticker","VNINDEX");
+//RSTick = "^GSPC"; //Replace with ticker of your choice
+
+WMAvalue = Param("RelStre WMA", 30, 1, 55, 1);
+Plot ( RelStrength( RSTick),"RelStrength "+ Name() + "  VS  "+ RSTick, -8 ); // Plot Relative Strength 
+Plot (WMA( RelStrength( RSTick),WMAvalue)," RelStrength WMA "+ WMAvalue,colorBrightGreen, styleThick);
